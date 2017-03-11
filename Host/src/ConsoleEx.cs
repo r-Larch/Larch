@@ -1,42 +1,33 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 
 
 namespace Host {
     internal class ConsoleEx {
-        private readonly Rect _baseViewRect;
+        public static void PrintException(string message, Exception e) {
+            var width = Console.WindowWidth;
+            Console.ForegroundColor = ConsoleColor.Red;
 
-        public ConsoleEx(Rect viewRect) {
-            _baseViewRect = viewRect;
+            Repeat("─", width);
+            Console.WriteLine($"{e.GetType().Name}: {message}");
+            Console.WriteLine(e.StackTrace);
+            Repeat("─", width);
+
+            Console.ResetColor();
         }
 
-        public void Curser(int x, int y) {
-            Console.SetCursorPosition(x, y);
+        public static void Repeat(string sign, int num) {
+            for (var i = 0; i < num; i++) {
+                Console.Write(sign);
+            }
         }
 
-        public void Clear() {
-            Console.Clear();
+        public static ConsoleKey WaitForYesNo() {
+            while (true) {
+                var key = Console.ReadKey().Key;
+                if (key == ConsoleKey.Y || key == ConsoleKey.N) {
+                    return key;
+                }
+            }
         }
-
-        public Rect GetVisibleRect() {
-            var curserX = Console.CursorLeft;
-            var curserY = Console.CursorTop;
-
-            return new Rect() {
-                X = _baseViewRect.X + curserX,
-                Y = _baseViewRect.X + curserY,
-                Width = _baseViewRect.Width,
-                Height = _baseViewRect.Height
-            };
-        }
-
-        public void Write(Buffer buffer) {
-            var rect = GetVisibleRect();
-            var charBuffer = buffer.GetBufferForRect(rect).ToArray();
-            Clear();
-            Console.Out.Write(charBuffer, 0, charBuffer.Length);
-        }
-
     }
 }
