@@ -1,4 +1,4 @@
-﻿
+
 
 # Larch.Host
 ## Larch.Host is a commandline tool to manage your hosts.txt entries.
