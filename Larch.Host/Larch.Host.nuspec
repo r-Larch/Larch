@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>Larch.Host</id>
+    <version>1.0.0</version>
+    <title>Larch.Host</title>
+    <authors>René Larch</authors>
+    <!--<owners>René Larch</owners>-->
+    <!--<licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>-->
+    <!--<projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>-->
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
+    <copyright>Copyright 2017</copyright>
+
+    <tags>larch.test host hosts host.txt hostfile hostsfile commandline tool</tags>
+    <summary>commandline tool to manage hosts.txt</summary>
+    <description>Larch.Host is a commandline tool to manage your hosts.txt entries.</description>
+
+    <dependencies>
+      <dependency id="DotNet4.5.2"/>
+      <dependency id="Mono.Options" version="4.4.0"/>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="choco\**" target="tools" />
+    <file src="bin\release\Host.exe" target="tools" />
+  </files>
+</package>

@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Host {
+namespace Larch.Host {
     internal class ConsoleEx {
         public static void PrintException(string message, Exception e) {
             var width = Console.WindowWidth;

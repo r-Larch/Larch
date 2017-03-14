@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using IcdamUploder.Wpf;
 
 
-namespace Host.Contoller {
+namespace Larch.Host.Contoller {
     internal class HostController {
         private static readonly string HostsFilePath = Environment.ExpandEnvironmentVariables(@"%WINDIR%\System32\drivers\etc\hosts");
 

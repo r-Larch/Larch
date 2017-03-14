@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text;
 
 
-namespace Host {
+namespace Larch.Host {
     internal class Watch : IDisposable {
         private readonly string _name;
         private readonly Stopwatch _watch;

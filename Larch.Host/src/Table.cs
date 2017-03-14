@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace Host {
+namespace Larch.Host {
     internal class Table {
         private readonly StringBuilder sb = new StringBuilder();
 
@@ -25,12 +25,17 @@ namespace Host {
             //var width = cols.Sum(x => x.Item2 + 1) + 1;
 
             Repeat("\r\n", top);
-            Repeat(' ', left + 1); sb.AppendLine(title);
+            Repeat(' ', left + 1);
+            sb.AppendLine(title);
 
-            Repeat(' ', left); TopBorder(cols);
-            Repeat(' ', left); Header(cols);
-            Repeat(' ', left); Border(cols);
-            Repeat(' ', left); Rows(cols, table, left);
+            Repeat(' ', left);
+            TopBorder(cols);
+            Repeat(' ', left);
+            Header(cols);
+            Repeat(' ', left);
+            Border(cols);
+            Repeat(' ', left);
+            Rows(cols, table, left);
             BottomBorder(cols);
 
             Console.WriteLine(sb);

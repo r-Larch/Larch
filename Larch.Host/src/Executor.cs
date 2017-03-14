@@ -8,7 +8,7 @@ using System.Threading;
 using Microsoft.Win32;
 
 
-namespace IcdamUploder.Wpf {
+namespace Larch.Host {
     public class Executor {
         private static readonly string Program64 = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
         private static readonly string Program32 = Environment.ExpandEnvironmentVariables("%programfiles(x86)%");
