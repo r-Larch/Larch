@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Larch.Host.Models;
 
 
 namespace Larch.Host.Contoller {
@@ -28,14 +29,14 @@ namespace Larch.Host.Contoller {
         }
 
         public void SearchHost(string s) {
-            List<Host> hosts;
+            List<HostEntry> hosts;
 
             using (new Watch("GetHosts")) {
                 hosts = GetHosts().OrderBy(_ => _.Domain).ToList();
             }
 
-            var startsWith = new List<Host>();
-            var contains = new List<Host>();
+            var startsWith = new List<HostEntry>();
+            var contains = new List<HostEntry>();
             using (new Watch("Filter")) {
                 foreach (var host in hosts) {
                     if (host.Domain.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)) {
@@ -54,14 +55,14 @@ namespace Larch.Host.Contoller {
 
 
         public void SearchIp(string s) {
-            List<Host> hosts;
+            List<HostEntry> hosts;
 
             using (new Watch("GetHosts")) {
                 hosts = GetHosts().OrderBy(_ => _.Domain).ToList();
             }
 
-            var startsWith = new List<Host>();
-            var contains = new List<Host>();
+            var startsWith = new List<HostEntry>();
+            var contains = new List<HostEntry>();
             using (new Watch("Filter")) {
                 foreach (var host in hosts) {
                     if (host.Ip.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)) {
@@ -78,7 +79,7 @@ namespace Larch.Host.Contoller {
             Print(hosts, s, startsWith, contains);
         }
 
-        public IEnumerable<Host> GetHosts() {
+        public IEnumerable<HostEntry> GetHosts() {
             var regex = new Regex(@"^(\d+.\d+.\d+.\d+)[\s|\t]+(\S+)$");
             var lineNum = 0;
             foreach (var line in GetLines()) {
@@ -87,7 +88,7 @@ namespace Larch.Host.Contoller {
 
                 var match = regex.Match(line);
                 if (match.Success) {
-                    yield return new Host() {
+                    yield return new HostEntry() {
                         Ip = match.Groups[1].Value,
                         Domain = match.Groups[2].Value,
                         Line = lineNum
@@ -108,18 +109,20 @@ namespace Larch.Host.Contoller {
         }
 
 
-        private void Print(List<Host> hosts, string search, params List<Host>[] filterd) {
+        private void Print(List<HostEntry> hosts, string search, params List<HostEntry>[] filterd) {
             var found = filterd.Sum(x => x.Count);
-            Console.WriteLine($"found: {found} matchs in {hosts.Count} entries");
-            Console.WriteLine();
+            var height = Console.WindowHeight;
+            var pages = found/height;
+            var page = 1;
 
+            if (found < height) {
+                Console.WriteLine($"found: {found} matchs in {hosts.Count} entries");
+            }
             if (found == 0) {
                 return;
             }
 
-            var height = Console.WindowHeight;
-            var pages = found/height;
-            var page = 1;
+            Console.WriteLine();
 
             using (new Watch("Print")) {
                 var count = 0;
@@ -142,9 +145,11 @@ namespace Larch.Host.Contoller {
 
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine($"found: {found} matchs in {hosts.Count} entries");
+            if (found >= height) {
+                Console.WriteLine($"found: {found} matchs in {hosts.Count} entries");
+            }
 
-            Watch.PrintTasks();
+            //Watch.PrintTasks();
         }
 
         private void PrintHighlighted(string line, string s) {
@@ -239,12 +244,5 @@ namespace Larch.Host.Contoller {
                 }
             }
         }
-    }
-
-
-    public class Host {
-        public string Ip { get; set; }
-        public string Domain { get; set; }
-        public int Line { get; set; }
     }
 }
