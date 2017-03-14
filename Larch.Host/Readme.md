@@ -1,12 +1,11 @@
 ﻿
 
-=Larch.Host=
-
-Larch.Host is a commandline tool to manage your hosts.txt entries.
+# Larch.Host
+## Larch.Host is a commandline tool to manage your hosts.txt entries.
 
 
 ```
-Usage: Larch.Host.exe [OPTIONS]+
+Usage: Host.exe [OPTIONS]+
 
 Options:
   -e, --edit                 Edit the hosts file
