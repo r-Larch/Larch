@@ -1,20 +1,19 @@
-===============================
-=HOSTS=
-===============================
-https://adaway.org/hosts.txt
-http://hosts-file.net/ad_servers.txt
-http://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext
-===============================
+﻿
+
+=Larch.Host=
+
+Larch.Host is a commandline tool to manage your hosts.txt entries.
 
 
-===============
-Install-Package
-===============
-Chocolatey on win 10
+```
+Usage: Larch.Host.exe [OPTIONS]+
 
-Install
-iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
-choco upgrade chocolatey
-
-
-https://vniklas.djungeln.se/2016/04/11/add-chocolatey-to-my-packagemanagement-in-windows-10/
+Options:
+  -e, --edit                 Edit the hosts file
+  -l, --list=VALUE           list host in hosts file
+  -a, --add=VALUE            Add to hosts file
+  -r, --remove=VALUE         Remove from hosts file
+      --rf=VALUE             Force Remove from hosts file
+  -i, --searchIp=VALUE       Search for IP in hosts file
+  -h, --help, -?             show this message and exit
+```
