@@ -1,7 +1,7 @@
 
 
 # Larch.Host
-## Larch.Host is a commandline tool to manage your hosts.txt entries.
+##### Larch.Host is a commandline tool to manage your hosts.txt entries.
 
 
 ```
@@ -16,3 +16,13 @@ Options:
   -i, --searchIp=VALUE       Search for IP in hosts file
   -h, --help, -?             show this message and exit
 ```
+
+### Install
+
+```
+Install-PackageProvider -Name Chocolatey
+Set-PackageSource -Name chocolatey
+
+Install-Package 
+```
+

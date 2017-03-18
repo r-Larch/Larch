@@ -2,27 +2,29 @@
 
 <package>
   <metadata>
-    <id>Larch.Host</id>
+    <id>hosts</id>
     <version>1.0.0</version>
-    <title>Larch.Host</title>
+    <title>hosts editor CMD</title>
     <authors>René Larch</authors>
     <!--<owners>René Larch</owners>-->
-    <!--<licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>-->
-    <!--<projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>-->
-    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <!--<licenseUrl></licenseUrl>-->
+    <projectUrl>https://github.com/r-Larch/Larch.Host</projectUrl>
+    <!--<iconUrl></iconUrl>-->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright 2017</copyright>
 
     <tags>host hosts host.txt hostfile hostsfile commandline tool</tags>
-    <summary>commandline tool to manage hosts.txt</summary>
-    <description>Larch.Host is a commandline tool to manage your hosts.txt entries.</description>
+    <summary>commandline tool to manage hosts file</summary>
+    <description>hosts is a commandline tool to manage your hosts.txt entries.</description>
 
     <dependencies>
-      <dependency id="Mono.Options" version="4.4.0"/>
+      <!--<dependency id="Mono.Options" version="4.4.0"/>-->
     </dependencies>
   </metadata>
-  <!--<files>
-    <file src="*" target="tools" />
-  </files>-->
+  <files>
+    <file src="choco\**" target="tools" />
+    <file src="bin\*.dll" target="tools" />
+    <file src="bin\hosts.exe" target="tools" />
+  </files>
 </package>
