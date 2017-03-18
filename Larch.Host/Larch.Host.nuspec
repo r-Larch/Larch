@@ -6,15 +6,20 @@
     <version>1.0.0</version>
     <title>hosts editor CMD</title>
     <authors>René Larch</authors>
-    <!--<owners>René Larch</owners>-->
+    <owners>René Larch</owners>
     <!--<licenseUrl></licenseUrl>-->
     <projectUrl>https://github.com/r-Larch/Larch.Host</projectUrl>
-    <!--<iconUrl></iconUrl>-->
+    <packageSourceUrl>https://github.com/r-Larch/Larch.Host</packageSourceUrl>
+    <projectSourceUrl>https://github.com/r-Larch/Larch.Host</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/r-Larch/Larch.Host/issues</bugTrackerUrl>
+    <docsUrl>https://github.com/r-Larch/Larch.Host/wiki</docsUrl>
+    <mailingListUrl>mailto:renelarch@gmail.com?Subject=pr:Larch.Host</mailingListUrl>
+    <iconUrl>https://raw.githubusercontent.com/r-Larch/Larch.Host/master/Larch.Host/icon.hosts.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright 2017</copyright>
 
-    <tags>host hosts host.txt hostfile hostsfile commandline tool</tags>
+    <tags>host hosts hostfile hostsfile commandline tool admin</tags>
     <summary>commandline tool to manage hosts file</summary>
     <description>hosts is a commandline tool to manage your hosts.txt entries.</description>
 
