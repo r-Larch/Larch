@@ -24,7 +24,7 @@ namespace Larch.Host.Contoller {
             Console.WriteLine();
         }
 
-        public void Edit(string s) {
+        public void Edit() {
             Executor.OpenEditor(new FileInfo(HostsFilePath)).StartNormal();
         }
 
@@ -232,7 +232,7 @@ namespace Larch.Host.Contoller {
                     continue;
                 }
 
-                Console.WriteLine($"Remove line '{line}'");
+                Console.WriteLine($"remove line '{line}'");
             }
 
             // write file
