@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Larch.Host")]
-[assembly: AssemblyDescription("A commandline tool to manage hosts.txt")]
+[assembly: AssemblyDescription("A commandline tool to manage hosts file")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("rLarch")]
-[assembly: AssemblyProduct("Larch.Host")]
+[assembly: AssemblyProduct("hosts")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
