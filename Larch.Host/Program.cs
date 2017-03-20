@@ -2,6 +2,7 @@
 using CommandLine;
 using Larch.Host.Contoller;
 using Larch.Host.Models;
+using Larch.Host.Parser;
 
 
 namespace Larch.Host {
@@ -10,7 +11,7 @@ namespace Larch.Host {
             try {
                 var p = new Program();
                 var options = new Options();
-                if (Parser.Default.ParseArguments(args, options)) {
+                if (CommandLine.Parser.Default.ParseArguments(args, options)) {
                     p.Run(options);
                 } else {
                     // print help
@@ -23,7 +24,8 @@ namespace Larch.Host {
 
 
         private void Run(Options options) {
-            var host = new HostController();
+            var hostfile = new HostsFile();
+            var host = new HostController(hostfile);
 
             // edit
             if (options.Edit) {

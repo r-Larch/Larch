@@ -29,5 +29,29 @@ namespace Larch.Host {
                 }
             }
         }
+
+        public static void PrintHighlighted(string line, string s, ConsoleColor color = ConsoleColor.Red) {
+            var start = line.IndexOf(s, StringComparison.InvariantCultureIgnoreCase);
+            var end = start + s.Length;
+            var chars = line.ToCharArray();
+            var reset = false;
+
+            for (var i = 0; i < chars.Length; i++) {
+                if (i == start) {
+                    Console.ForegroundColor = color;
+                    reset = true;
+                }
+                if (i == end) {
+                    Console.ResetColor();
+                    reset = false;
+                }
+                Console.Write(chars[i]);
+            }
+
+            if (reset) {
+                Console.ResetColor();
+            }
+            Console.Write(Environment.NewLine);
+        }
     }
 }
