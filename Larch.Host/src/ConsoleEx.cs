@@ -53,5 +53,29 @@ namespace Larch.Host {
             }
             Console.Write(Environment.NewLine);
         }
+        public static bool AskForYes(string question) {
+            Console.Write(question + " (Y/N) ");
+            ConsoleKey key;
+            while (true) {
+                key = Console.ReadKey().Key;
+                if (key == ConsoleKey.Y || key == ConsoleKey.N) {
+                    break;
+                }
+            }
+
+            return key == ConsoleKey.Y;
+        }
+
+        public static List<T> AskYesOrNo<T>(List<T> hosts, Func<T, string> question) {
+            var toRemove = new List<T>();
+            foreach (var host in hosts) {
+                if (AskForYes(question(host))) {
+                    toRemove.Add(host);
+                }
+                Console.WriteLine();
+            }
+
+            return toRemove;
+        }
     }
 }

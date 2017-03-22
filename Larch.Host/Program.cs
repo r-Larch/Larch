@@ -1,5 +1,4 @@
 ﻿using System;
-using CommandLine;
 using Larch.Host.Contoller;
 using Larch.Host.Models;
 using Larch.Host.Parser;
@@ -57,12 +56,7 @@ namespace Larch.Host {
 
             // remove value
             if (options.Remove) {
-                if (options.Force) {
-                    host.RemoveForce(options.Value);
-                    return;
-                }
-
-                host.Remove(options.Value);
+                host.Remove(options.Value, options.Force);
                 return;
             }
 

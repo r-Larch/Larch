@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
-using Larch.Host.Models;
 using Larch.Host.Parser;
 
 
@@ -130,78 +128,35 @@ namespace Larch.Host.Contoller {
             //Watch.PrintTasks();
         }
 
-        public void Remove(string s) {
+
+        public void Remove(string s, bool force) {
             int line;
             if (!int.TryParse(s, out line)) {
                 line = -1;
             }
-            var hosts = _hostsFile.GetHosts()
-                .Where(x => x.Domain == s || x.LineNumber == line)
-                .OrderBy(x => x.Domain)
-                .ToList();
 
-            Console.WriteLine($"found {hosts.Count} to remove\r\n");
-
-            var toRemove = new List<int>();
-            foreach (var host in hosts) {
-                Console.Write($"remove '{host.Ip} {host.Domain}'? (Y/N) ");
-                var key = ConsoleEx.WaitForYesNo();
-                if (key == ConsoleKey.Y) {
-                    toRemove.Add(host.LineNumber);
-                }
-                Console.WriteLine();
+            List<HostsFileLine> hosts;
+            using (new Watch("filter")) {
+                hosts = _hostsFile.GetHosts()
+                    .Where(x => x.Domain == s || x.LineNumber == line)
+                    .OrderBy(x => x.Domain)
+                    .ToList();
             }
 
-            RemoveLines(toRemove);
-        }
-
-
-        public void RemoveForce(string s) {
-            int line;
-            if (!int.TryParse(s, out line)) {
-                line = -1;
+            if (!force) {
+                Console.WriteLine($"found {hosts.Count} to remove\r\n");
+                hosts = ConsoleEx.AskYesOrNo(hosts, x => $"remove '{HostsFile.CreateTextLine(x)}'?");
             }
-            var hosts = _hostsFile.GetHosts()
-                .Where(x => x.Domain == s || x.LineNumber == line)
-                .OrderBy(x => x.Domain)
-                .ToList();
 
             if (hosts.Count == 0) {
                 Console.WriteLine($"-- nothing to remove");
                 return;
             }
 
-            RemoveLines(hosts.Select(x => x.LineNumber));
-        }
-
-        private void RemoveLines(IEnumerable<int> toRemove) {
-            var remove = toRemove as int[] ?? toRemove.ToArray();
-            if (remove.Length == 0) {
-                Console.WriteLine($"-- nothing to remove");
-                return;
+            using (new Watch("delete")) {
+                _hostsFile.Remove(hosts);
             }
-
-            // TODO refactor
-            //var lineNum = 0;
-            //var lines = new List<string>();
-            //foreach (var line in _hostsFile.GetLines()) {
-            //    lineNum++;
-            //    if (!remove.Contains(lineNum)) {
-            //        lines.Add(line);
-            //        continue;
-            //    }
-
-            //    Console.WriteLine($"remove line '{line}'");
-            //}
-
-            //// write file
-            //using (var file = File.Open(HostsFilePath, FileMode.Truncate, FileAccess.Write)) {
-            //    using (var fw = new StreamWriter(file)) {
-            //        foreach (var line in lines) {
-            //            fw.WriteLine(line);
-            //        }
-            //    }
-            //}
+            hosts.ForEach(x => Console.WriteLine(HostsFile.CreateTextLine(x)));
         }
     }
 }

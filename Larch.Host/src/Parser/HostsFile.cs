@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 
 namespace Larch.Host.Parser {
@@ -76,6 +78,31 @@ namespace Larch.Host.Parser {
             }
 
             return line;
+        }
+
+        public void Remove(IEnumerable<HostsFileLine> toRemove) {
+            var remove = toRemove as HostsFileLine[] ?? toRemove.ToArray();
+            if (remove.Length == 0) {
+                return;
+            }
+
+            var lineNum = 0;
+            var lines = new List<string>();
+            foreach (var line in GetLines()) {
+                lineNum++;
+                if (remove.Any(x => x.LineNumber == lineNum)) continue;
+
+                lines.Add(line);
+            }
+
+            // write file
+            using (var file = File.Open(FilePath, FileMode.Truncate, FileAccess.Write)) {
+                using (var fw = new StreamWriter(file)) {
+                    foreach (var line in lines) {
+                        fw.WriteLine(line);
+                    }
+                }
+            }
         }
     }
 }
