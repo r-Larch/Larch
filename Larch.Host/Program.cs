@@ -17,6 +17,11 @@ namespace Larch.Host {
                     // print help
                     Console.WriteLine(options.GetUsage());
                 }
+
+                if (options.Debug) {
+                    Watch.PrintTasks();
+                }
+
             } catch (Exception e) {
                 ConsoleEx.PrintException(e.Message, e);
             }

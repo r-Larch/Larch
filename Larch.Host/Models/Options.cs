@@ -26,6 +26,9 @@ namespace Larch.Host.Models {
         [Option('i', "ip", HelpText = "Use Ip address for list")]
         public bool Ip { get; set; }
 
+        [Option('d', "debug", HelpText = "Enables debuging")]
+        public bool Debug { get; set; }
+
         [ParserState]
         public IParserState LastParserState { get; set; }
 
