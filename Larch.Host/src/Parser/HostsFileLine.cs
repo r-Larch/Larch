@@ -1,8 +1,9 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 
 namespace Larch.Host.Parser {
-    public class HostsFileLine {
+    public class HostsFileLine : IFileLine {
 
         /// <summary>
         /// Ignores Ipv6 [Time 44ms in test at 16000 lines]
@@ -89,7 +90,12 @@ namespace Larch.Host.Parser {
 
         public int LineNumber { get; set; }
         public bool IsDisabled { get; set; }
-        public string Ip => string.IsNullOrEmpty(Ipv4) ? Ipv6 : Ipv4;
+
+        public string Ip {
+            get { return string.IsNullOrEmpty(Ipv4) ? Ipv6 : Ipv4; }
+            set { throw new NotSupportedException("Ip is readonly");}
+        }
+
         public string Ipv4 { get; set; }
         public string Ipv6 { get; set; }
         public string Domain { get; set; }

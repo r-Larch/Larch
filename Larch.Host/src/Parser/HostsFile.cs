@@ -42,12 +42,40 @@ namespace Larch.Host.Parser {
             }
         }
 
-        public void AppendLine(string line) {
+        public static string CreateTextLine(IFileLine line) {
+            if (line.IsCommentarLine) {
+                line.IsDisabled = false;
+            }
+
+            var sb = new StringBuilder();
+            if (line.IsDisabled) {
+                sb.Append("# ");
+            }
+            if (!line.IsCommentarLine) {
+                sb.Append(line.Ip?.Trim());
+                sb.Append(" ");
+                sb.Append(line.Domain?.Trim());
+            }
+            if (!string.IsNullOrEmpty(line.Commentar)) {
+                if (!line.IsCommentarLine) {
+                    sb.Append(" ");
+                }
+                sb.Append("#");
+                sb.Append(" ");
+                sb.Append(line.Commentar.Trim());
+            }
+            return sb.ToString();
+        }
+
+        public string Append(FileLine fileLine) {
+            var line = CreateTextLine(fileLine);
             using (var file = File.Open(FilePath, FileMode.Append, FileAccess.Write)) {
                 using (var fw = new StreamWriter(file)) {
                     fw.WriteLine(line);
                 }
             }
+
+            return line;
         }
     }
 }

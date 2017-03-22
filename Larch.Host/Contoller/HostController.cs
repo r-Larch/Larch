@@ -16,10 +16,13 @@ namespace Larch.Host.Contoller {
         }
 
         public void Add(string host) {
-            host = host.Trim();
-            var line = $"127.0.0.1 {host}";
-
-            _hostsFile.AppendLine(line);
+            string line;
+            using (new Watch("add")) {
+                line = _hostsFile.Append(new FileLine() {
+                    Ip = "127.0.0.1",
+                    Domain = host.Trim()
+                });
+            }
 
             Console.WriteLine($"added successfully '{line}'");
             Console.WriteLine();

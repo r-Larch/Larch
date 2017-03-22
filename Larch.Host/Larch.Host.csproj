@@ -50,6 +50,8 @@
     <Compile Include="src\Executor.cs" />
     <Compile Include="src\Parser\HostsFileLine.cs" />
     <Compile Include="src\Parser\HostsFile.cs" />
+    <Compile Include="src\Parser\FileLine.cs" />
+    <Compile Include="src\Parser\IFileLine.cs" />
     <Compile Include="src\Table.cs" />
     <Compile Include="src\Watch.cs" />
     <Compile Include="Contoller\HostController.cs" />
