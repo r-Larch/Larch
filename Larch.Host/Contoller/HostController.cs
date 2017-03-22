@@ -27,6 +27,7 @@ namespace Larch.Host.Contoller {
 
         public void Edit() {
             Executor.OpenEditor(new FileInfo(_hostsFile.FilePath)).StartNormal();
+            Console.WriteLine("editor is starting...");
         }
 
         public void SearchHost(string s) {

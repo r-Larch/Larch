@@ -8,7 +8,7 @@ namespace Larch.Host.Models {
         [ValueOption(0)]
         public string Value { get; set; }
 
-        [Option('e', "edit", HelpText = "Edit the hosts file")]
+        [Option('e', "edit", HelpText = "Edit the hosts file in editor. set %EDITOR% to use your favorite editor.")]
         public bool Edit { get; set; }
 
         [Option('l', "list", HelpText = "list host in hosts file")]
