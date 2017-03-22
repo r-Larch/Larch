@@ -34,13 +34,13 @@ namespace Larch.Host.Contoller {
         public void SearchHost(string s) {
             List<HostsFileLine> hosts;
 
-            using (new Watch("GetHosts")) {
+            using (new Watch("read file")) {
                 hosts = _hostsFile.GetHosts().OrderBy(_ => _.Domain).ToList();
             }
 
             var startsWith = new List<HostsFileLine>();
             var contains = new List<HostsFileLine>();
-            using (new Watch("Filter")) {
+            using (new Watch("filter")) {
                 foreach (var host in hosts) {
                     if (host.Domain.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)) {
                         startsWith.Add(host);
@@ -60,13 +60,13 @@ namespace Larch.Host.Contoller {
         public void SearchIp(string s) {
             List<HostsFileLine> hosts;
 
-            using (new Watch("GetHosts")) {
+            using (new Watch("read file")) {
                 hosts = _hostsFile.GetHosts().OrderBy(_ => _.Domain).ToList();
             }
 
             var startsWith = new List<HostsFileLine>();
             var contains = new List<HostsFileLine>();
-            using (new Watch("Filter")) {
+            using (new Watch("filter")) {
                 foreach (var host in hosts) {
                     if (host.Ip.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)) {
                         startsWith.Add(host);
@@ -83,49 +83,15 @@ namespace Larch.Host.Contoller {
         }
 
 
-
-
         private void Print(List<HostsFileLine> hosts, string search, params List<HostsFileLine>[] filterd) {
-            var found = filterd.Sum(x => x.Count);
-            var height = Console.WindowHeight;
-            var pages = found/height;
-            var page = 1;
-
-            if (found < height) {
-                Console.WriteLine($"found: {found} matchs in {hosts.Count} entries");
+            using (new Watch("print")) {
+                ConsoleEx.PrintWithPaging(
+                    list: filterd.SelectMany(x => x),
+                    line: (host, nr) => $"{host.LineNumber,6}| {host.Ip}   {host.Domain}",
+                    search: search,
+                    countAll: hosts.Count
+                    );
             }
-            if (found == 0) {
-                return;
-            }
-
-            Console.WriteLine();
-
-            using (new Watch("Print")) {
-                var count = 0;
-
-                Console.WriteLine("Line  |");
-                foreach (var host in filterd.SelectMany(x => x)) {
-                    ConsoleEx.PrintHighlighted($"{host.LineNumber,6}| {host.Ip}   {host.Domain}", search);
-                    count++;
-
-                    if (count < height) continue;
-
-                    Console.Write($" -- page: {page++}/{pages} -- ");
-                    count = 0;
-                    var key = Console.ReadKey();
-                    if (key.Key == ConsoleKey.Escape) {
-                        break;
-                    }
-                }
-            }
-
-            Console.WriteLine();
-            Console.WriteLine();
-            if (found >= height) {
-                Console.WriteLine($"found: {found} matchs in {hosts.Count} entries");
-            }
-
-            //Watch.PrintTasks();
         }
 
 

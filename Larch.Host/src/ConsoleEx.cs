@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Larch.Host.Parser;
 
 
 namespace Larch.Host {
@@ -21,16 +24,12 @@ namespace Larch.Host {
             }
         }
 
-        public static ConsoleKey WaitForYesNo() {
-            while (true) {
-                var key = Console.ReadKey().Key;
-                if (key == ConsoleKey.Y || key == ConsoleKey.N) {
-                    return key;
-                }
-            }
-        }
-
         public static void PrintHighlighted(string line, string s, ConsoleColor color = ConsoleColor.Red) {
+            if (s == null) {
+                Console.WriteLine(line);
+                return;
+            }
+
             var start = line.IndexOf(s, StringComparison.InvariantCultureIgnoreCase);
             var end = start + s.Length;
             var chars = line.ToCharArray();
@@ -53,6 +52,7 @@ namespace Larch.Host {
             }
             Console.Write(Environment.NewLine);
         }
+
         public static bool AskForYes(string question) {
             Console.Write(question + " (Y/N) ");
             ConsoleKey key;
@@ -76,6 +76,52 @@ namespace Larch.Host {
             }
 
             return toRemove;
+        }
+
+        public static void PrintWithPaging<T>(IEnumerable<T> list, Func<T, int, string> line, string search = null, int countAll = -1) {
+            var li = list as T[] ?? list.ToArray();
+
+            var found = li.Length;
+            var height = Console.WindowHeight;
+            var pages = found/height;
+            var page = 1;
+
+            Console.WriteLine($"found: {found}" + (countAll != -1 ? $" matchs in {countAll} entries" : ""));
+
+            if (found >= height) {
+                if (!AskForYes($"Are you sure you wand show {pages} pages full text?")) {
+                    return;
+                }
+            }
+
+            if (found == 0) {
+                return;
+            }
+
+            Console.WriteLine();
+
+            var count = 0;
+            var lineNumber = 0;
+            Console.WriteLine("Line  |");
+            foreach (var x in li) {
+                ConsoleEx.PrintHighlighted(line(x, lineNumber++), search);
+                count++;
+
+                if (count < height) continue;
+
+                Console.Write($" -- page: {page++}/{pages} -- ");
+                count = 0;
+                var key = Console.ReadKey();
+                if (key.Key == ConsoleKey.Escape) {
+                    break;
+                }
+            }
+
+            Console.WriteLine();
+            if (found >= height) {
+                Console.WriteLine();
+                Console.WriteLine($"found: {found}" + (countAll != -1 ? $" matchs in {countAll} entries" : ""));
+            }
         }
     }
 }
