@@ -31,65 +31,28 @@ namespace Larch.Host.Contoller {
             Console.WriteLine("editor is starting...");
         }
 
-        public void SearchHost(string s) {
+        public void List(Func<HostsFileLine, string> property, Filter filter) {
             List<HostsFileLine> hosts;
 
             using (new Watch("read file")) {
-                hosts = _hostsFile.GetHosts().OrderBy(_ => _.Domain).ToList();
+                hosts = _hostsFile.GetHosts().ToList();
             }
 
-            var startsWith = new List<HostsFileLine>();
-            var contains = new List<HostsFileLine>();
+            List<Match<HostsFileLine>> matches;
             using (new Watch("filter")) {
-                foreach (var host in hosts) {
-                    if (host.Domain.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)) {
-                        startsWith.Add(host);
-                        continue;
-                    }
-
-                    if (host.Domain.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) != -1) {
-                        contains.Add(host);
-                    }
-                }
+                matches = hosts.Select(x => filter.GetMatch(property(x), x)).Where(x => x.IsSuccess).ToList();
             }
 
-            Print(hosts, s, startsWith, contains);
+            Print(matches, hosts.Count);
         }
 
 
-        public void SearchIp(string s) {
-            List<HostsFileLine> hosts;
-
-            using (new Watch("read file")) {
-                hosts = _hostsFile.GetHosts().OrderBy(_ => _.Domain).ToList();
-            }
-
-            var startsWith = new List<HostsFileLine>();
-            var contains = new List<HostsFileLine>();
-            using (new Watch("filter")) {
-                foreach (var host in hosts) {
-                    if (host.Ip.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)) {
-                        startsWith.Add(host);
-                        continue;
-                    }
-
-                    if (host.Ip.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) != -1) {
-                        contains.Add(host);
-                    }
-                }
-            }
-
-            Print(hosts, s, startsWith, contains);
-        }
-
-
-        private void Print(List<HostsFileLine> hosts, string search, params List<HostsFileLine>[] filterd) {
+        private void Print(List<Match<HostsFileLine>> matches, int countAll = -1) {
             using (new Watch("print")) {
                 ConsoleEx.PrintWithPaging(
-                    list: filterd.SelectMany(x => x),
+                    matches: matches,
                     line: (host, nr) => $"{host.LineNumber,6}| {host.Ip}   {host.Domain}",
-                    search: search,
-                    countAll: hosts.Count
+                    countAll: countAll
                     );
             }
         }
@@ -101,6 +64,7 @@ namespace Larch.Host.Contoller {
                 line = -1;
             }
 
+            // TODO wildcarts and regex
             List<HostsFileLine> hosts;
             using (new Watch("filter")) {
                 hosts = _hostsFile.GetHosts()
@@ -122,7 +86,7 @@ namespace Larch.Host.Contoller {
             using (new Watch("delete")) {
                 _hostsFile.Remove(hosts);
             }
-            hosts.ForEach(x => Console.WriteLine(HostsFile.CreateTextLine(x)));
+            hosts.ForEach(x => Console.WriteLine($"removed: {HostsFile.CreateTextLine(x)}"));
         }
     }
 }

@@ -48,6 +48,7 @@
     <Compile Include="Models\Options.cs" />
     <Compile Include="src\ConsoleEx.cs" />
     <Compile Include="src\Executor.cs" />
+    <Compile Include="src\Filter.cs" />
     <Compile Include="src\Parser\HostsFileLine.cs" />
     <Compile Include="src\Parser\HostsFile.cs" />
     <Compile Include="src\Parser\FileLine.cs" />

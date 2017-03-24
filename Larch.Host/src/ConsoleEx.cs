@@ -5,7 +5,7 @@ using Larch.Host.Parser;
 
 
 namespace Larch.Host {
-    internal class ConsoleEx {
+    public class ConsoleEx {
         public static void PrintException(string message, Exception e) {
             var width = Console.WindowWidth;
             Console.ForegroundColor = ConsoleColor.Red;
@@ -24,32 +24,58 @@ namespace Larch.Host {
             }
         }
 
-        public static void PrintHighlighted(string line, string s, ConsoleColor color = ConsoleColor.Red) {
-            if (s == null) {
+        public static void PrintHighlighted<T>(string line, Match<T> filter, ConsoleColor color = ConsoleColor.Red) {
+            if (filter == null) {
                 Console.WriteLine(line);
                 return;
             }
 
-            var start = line.IndexOf(s, StringComparison.InvariantCultureIgnoreCase);
-            var end = start + s.Length;
             var chars = line.ToCharArray();
             var reset = false;
 
-            for (var i = 0; i < chars.Length; i++) {
-                if (i == start) {
+
+            var count = 0;
+            var max = line.IndexOf(filter.Value, StringComparison.Ordinal);
+
+            //Console.WriteLine(filter.Value);
+            //new Table().Create(1, 1, "matchs", filter.Matches);return;
+
+            var s = $"max: {max} char: '{chars[max]}' ";
+            for (var i = 0; i < max; i++) {
+                Console.Write(chars[i]);
+                count++;
+            }
+
+            foreach (var match in filter.Matches) {
+                var start = count + match.Start;
+                var stop = count + match.Stop;
+                for (var i = count; i < start; i++) {
+                    Console.Write(chars[i]);
+                    count++;
+                }
+
+                if (match.IsMatch) {
                     Console.ForegroundColor = color;
                     reset = true;
                 }
-                if (i == end) {
-                    Console.ResetColor();
-                    reset = false;
+
+                s += $"{match.Start}->{match.Stop}=>{start}->{stop} ";
+                for (var i = start; i < stop; i++) {
+                    Console.Write(chars[i]);
+                    count++;
                 }
+
+                if (reset) {
+                    Console.ResetColor();
+                }
+            }
+
+            for (var i = count; i < line.Length; i++) {
                 Console.Write(chars[i]);
             }
 
-            if (reset) {
-                Console.ResetColor();
-            }
+            Console.Write($"\t{s}");
+
             Console.Write(Environment.NewLine);
         }
 
@@ -78,10 +104,10 @@ namespace Larch.Host {
             return toRemove;
         }
 
-        public static void PrintWithPaging<T>(IEnumerable<T> list, Func<T, int, string> line, string search = null, int countAll = -1) {
-            var li = list as T[] ?? list.ToArray();
+        public static void PrintWithPaging<T>(IEnumerable<Match<T>> matches, Func<T, int, string> line, int countAll = -1) {
+            var mes = matches as Match<T>[] ?? matches.ToArray();
 
-            var found = li.Length;
+            var found = mes.Length;
             var height = Console.WindowHeight;
             var pages = found/height;
             var page = 1;
@@ -103,8 +129,8 @@ namespace Larch.Host {
             var count = 0;
             var lineNumber = 0;
             Console.WriteLine("Line  |");
-            foreach (var x in li) {
-                ConsoleEx.PrintHighlighted(line(x, lineNumber++), search);
+            foreach (var match in mes) {
+                ConsoleEx.PrintHighlighted(line(match.Model, lineNumber++), match);
                 count++;
 
                 if (count < height) continue;
@@ -115,6 +141,8 @@ namespace Larch.Host {
                 if (key.Key == ConsoleKey.Escape) {
                     break;
                 }
+
+                Console.CursorLeft = 0;
             }
 
             Console.WriteLine();

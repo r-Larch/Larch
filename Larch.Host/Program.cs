@@ -39,12 +39,14 @@ namespace Larch.Host {
 
             // list
             if (options.List) {
+                var filter = new Filter(options.Value, options.Regex ? CampareType.Regex : CampareType.WildCard, CompareMode.CaseIgnore);
+
                 if (options.Ip) {
-                    host.SearchIp(options.Value);
+                    host.List(x => x.Ip, filter);
                     return;
                 }
 
-                host.SearchHost(options.Value);
+                host.List(x => x.Domain, filter);
                 return;
             }
 

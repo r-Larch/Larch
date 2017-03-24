@@ -9,6 +9,12 @@ namespace Larch.Host {
         private readonly StringBuilder sb = new StringBuilder();
 
         public void Create<T>(int left, int top, string title, IEnumerable<T> data) {
+            var d = data as T[] ?? data.ToArray();
+            if (d.Length == 0) {
+                Console.WriteLine($"{title}: List is empty");
+                return;
+            }
+
             var type = typeof(T);
             var props = type.GetProperties();
             var fields = type.GetFields();
@@ -16,13 +22,13 @@ namespace Larch.Host {
             var cols = new List<Tuple<string, int>>(); // = list von (spalten name, spalten breite)   [col]
             var table = new List<List<string>>(); // = list von spalten   [col][row]
             foreach (var field in fields) {
-                var column = data.Select(rowdata => field.GetValue(rowdata)?.ToString() ?? string.Empty).ToList();
+                var column = d.Select(rowdata => field.GetValue(rowdata)?.ToString() ?? string.Empty).ToList();
                 table.Add(column);
 
                 cols.Add(new Tuple<string, int>(field.Name, Math.Max(column.Max(x => x.Length), field.Name.Length) + 1));
             }
             foreach (var prop in props) {
-                var column = data.Select(rowdata => prop.GetValue(rowdata)?.ToString() ?? string.Empty).ToList();
+                var column = d.Select(rowdata => prop.GetValue(rowdata)?.ToString() ?? string.Empty).ToList();
                 table.Add(column);
 
                 cols.Add(new Tuple<string, int>(prop.Name, Math.Max(column.Max(x => x.Length), prop.Name.Length) + 1));

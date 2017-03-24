@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="FilterTester.cs" />
     <Compile Include="CreateTextLineTester.cs" />
     <Compile Include="HostsFileTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

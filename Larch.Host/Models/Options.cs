@@ -26,6 +26,9 @@ namespace Larch.Host.Models {
         [Option('i', "ip", HelpText = "Use Ip address for list")]
         public bool Ip { get; set; }
 
+        [Option('R', "regex", HelpText = "Use regex for filter")]
+        public bool Regex { get; set; }
+
         [Option('d', "debug", HelpText = "Enables debuging")]
         public bool Debug { get; set; }
 
