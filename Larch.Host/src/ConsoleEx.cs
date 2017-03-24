@@ -31,52 +31,38 @@ namespace Larch.Host {
             }
 
             var chars = line.ToCharArray();
-            var reset = false;
-
 
             var count = 0;
             var max = line.IndexOf(filter.Value, StringComparison.Ordinal);
 
-            //Console.WriteLine(filter.Value);
-            //new Table().Create(1, 1, "matchs", filter.Matches);return;
-
-            var s = $"max: {max} char: '{chars[max]}' ";
-            for (var i = 0; i < max; i++) {
-                Console.Write(chars[i]);
-                count++;
+            while (count < max) {
+                Console.Write(chars[count++]);
             }
 
-            foreach (var match in filter.Matches) {
-                var start = count + match.Start;
-                var stop = count + match.Stop;
-                for (var i = count; i < start; i++) {
-                    Console.Write(chars[i]);
-                    count++;
+            var last = filter.Matches.Max(x => x.Stop);
+            var c = Console.ForegroundColor;
+            for (var i = 0; i < last; i++) {
+                var part = filter.Matches.LastOrDefault(x => x.IsMatch && i >= x.Start && i < x.Stop);
+                if (part != null) {
+                    var col = GetColor(part.Num);
+                    Console.ForegroundColor = col;
+                } else {
+                    Console.ForegroundColor = c;
                 }
-
-                if (match.IsMatch) {
-                    Console.ForegroundColor = color;
-                    reset = true;
-                }
-
-                s += $"{match.Start}->{match.Stop}=>{start}->{stop} ";
-                for (var i = start; i < stop; i++) {
-                    Console.Write(chars[i]);
-                    count++;
-                }
-
-                if (reset) {
-                    Console.ResetColor();
-                }
+                Console.Write(chars[count++]);
             }
+            Console.ForegroundColor = c;
 
-            for (var i = count; i < line.Length; i++) {
-                Console.Write(chars[i]);
+            while (count < line.Length) {
+                Console.Write(chars[count++]);
             }
-
-            Console.Write($"\t{s}");
 
             Console.Write(Environment.NewLine);
+        }
+
+        private static ConsoleColor GetColor(int num) {
+            var t = Enum.GetValues(typeof(ConsoleColor));
+            return (ConsoleColor) t.GetValue(t.Length - num - 2);
         }
 
         public static bool AskForYes(string question) {

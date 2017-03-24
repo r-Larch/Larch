@@ -87,7 +87,8 @@ namespace Larch.Host {
                 yield return new Group() {
                     Start = 0,
                     Stop = value.Length,
-                    IsMatch = _text == value
+                    IsMatch = _text == value,
+                    Num = 0
                 };
 
                 yield break;
@@ -100,7 +101,8 @@ namespace Larch.Host {
                         yield return new Group() {
                             Start = matchs[i].Groups[j].Index,
                             Stop = matchs[i].Groups[j].Index + matchs[i].Groups[j].Length,
-                            IsMatch = matchs[i].Groups[j].Success
+                            IsMatch = matchs[i].Groups[j].Success,
+                            Num = j
                         };
                     }
                 }
@@ -111,7 +113,8 @@ namespace Larch.Host {
             yield return new Group() {
                 Start = 0,
                 Stop = value.Length,
-                IsMatch = true
+                IsMatch = true,
+                Num = 0
             };
         }
     }
@@ -129,6 +132,7 @@ namespace Larch.Host {
         public int Start { get; set; }
         public int Stop { get; set; }
         public bool IsMatch { get; set; }
+        public int Num { get; set; }
     }
 
 
