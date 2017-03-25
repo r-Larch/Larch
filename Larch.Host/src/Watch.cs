@@ -5,11 +5,11 @@ using System.Text;
 
 
 namespace Larch.Host {
-    internal class Watch : IDisposable {
+    public class Watch : IDisposable {
         private readonly string _name;
         private readonly Stopwatch _watch;
 
-        public static List<Task> Tasks = new List<Task>();
+        private static readonly List<Task> Tasks = new List<Task>();
 
         public Watch(string name) {
             _name = name;
@@ -20,7 +20,9 @@ namespace Larch.Host {
             _watch.Stop();
             var msec = _watch.ElapsedMilliseconds;
             var sec = (int) (msec/1000);
+            msec = msec - sec*1000;
             var min = (int) (sec/60);
+            sec = sec - min * 60;
 
             var sb = new StringBuilder();
             if (min > 0) {

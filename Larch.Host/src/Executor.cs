@@ -14,19 +14,21 @@ namespace Larch.Host {
         private static readonly string Program32 = Environment.ExpandEnvironmentVariables("%programfiles(x86)%");
 
         public static ProcessRunner OpenEditor(FileInfo fileInfo) {
-            var progDir = FindSubDir(Program64, "Sublime*") ?? FindSubDir(Program32, "Sublime*");
-            if (progDir == null) return null;
+            var editor = GetEnvVar("%EDITOR%");
+            if (string.IsNullOrEmpty(editor)) {
+                var progDir = FindSubDir(Program64, "Sublime*") ?? FindSubDir(Program32, "Sublime*");
+                if (progDir != null) {
+                    editor = FindSubFileExe(progDir, "sublime*.exe") ?? FindSubFileExe(Path.Combine(progDir, "bin"), "sublime-*.exe");
+                }
+            }
 
-            var progPath = FindSubFileExe(progDir, "sublime*.exe") ?? FindSubFileExe(Path.Combine(progDir, "bin"), "sublime-*.exe");
-            if (progPath == null) return null;
-
-            if (!File.Exists(progPath)) {
-                progPath = "notepad.exe";
+            if (string.IsNullOrEmpty(editor) || !File.Exists(editor)) {
+                editor = "notepad.exe";
             }
 
             var process = new Process {
                 StartInfo = new ProcessStartInfo() {
-                    FileName = progPath,
+                    FileName = editor,
                     Arguments = "\"" + fileInfo.FullName + "\""
                 }
             };
@@ -92,6 +94,11 @@ namespace Larch.Host {
 
         private static string FindSubFileExe(string dir, string name) {
             return Directory.GetFiles(dir, name).FirstOrDefault();
+        }
+
+        private static string GetEnvVar(string var) {
+            var res = Environment.ExpandEnvironmentVariables(var);
+            return res != var ? res : null;
         }
     }
 
