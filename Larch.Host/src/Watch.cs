@@ -20,7 +20,9 @@ namespace Larch.Host {
             _watch.Stop();
             var msec = _watch.ElapsedMilliseconds;
             var sec = (int) (msec/1000);
+            msec = msec - sec*1000;
             var min = (int) (sec/60);
+            sec = sec - min * 60;
 
             var sb = new StringBuilder();
             if (min > 0) {

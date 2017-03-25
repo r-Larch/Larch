@@ -11,7 +11,7 @@ namespace Larch.Host.Models {
         [Option('e', "edit", HelpText = "Edit the hosts file in editor. set %EDITOR% to use your favorite editor.")]
         public bool Edit { get; set; }
 
-        [Option('l', "list", HelpText = "list host in hosts file")]
+        [Option('l', "list", HelpText = "List using wildcards or regex")]
         public bool List { get; set; }
 
         [Option('a', "add", HelpText = "Add to hosts file")]
@@ -23,8 +23,11 @@ namespace Larch.Host.Models {
         [Option('f', "force", HelpText = "Use force (e.g. force remove)")]
         public bool Force { get; set; }
 
-        [Option('i', "ip", HelpText = "Use Ip address for list")]
+        [Option('i', "ip", HelpText = "Filter by ip address")]
         public bool Ip { get; set; }
+
+        [Option('n', "line", HelpText = "Filter by line number")]
+        public bool Line { get; set; }
 
         [Option('R', "regex", HelpText = "Use regex for filter")]
         public bool Regex { get; set; }

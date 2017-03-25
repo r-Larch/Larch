@@ -31,62 +31,83 @@ namespace Larch.Host.Contoller {
             Console.WriteLine("editor is starting...");
         }
 
-        public void List(Func<HostsFileLine, string> property, Filter filter) {
+        public void List(Filter filter, FilterProp what) {
             List<HostsFileLine> hosts;
 
             using (new Watch("read file")) {
                 hosts = _hostsFile.GetHosts().ToList();
             }
 
-            List<Match<HostsFileLine>> matches;
-            using (new Watch("filter")) {
-                matches = hosts.Select(x => filter.GetMatch(property(x), x)).Where(x => x.IsSuccess).ToList();
-            }
+            var matches = Filter(filter, what);
 
-            Print(matches, hosts.Count);
-        }
-
-
-        private void Print(List<Match<HostsFileLine>> matches, int countAll = -1) {
             using (new Watch("print")) {
                 ConsoleEx.PrintWithPaging(
-                    matches: matches,
-                    line: (host, nr) => $"{host.LineNumber,6}| {host.Ip}   {host.Domain}",
-                    countAll: countAll
-                    );
+                    list: matches,
+                    countAll: hosts.Count,
+                    line: (match, nr) => {
+                        switch (what) {
+                            default:
+                            case FilterProp.Domain:
+                                return new ConsoleWriter().Write($"{match.Model.LineNumber,6}| {match.Model.Ip}   ").Write(match);
+                            case FilterProp.Ip:
+                                return new ConsoleWriter().Write($"{match.Model.LineNumber,6}| ").Write(match).Write($"   {match.Model.Domain}");
+                            case FilterProp.Line:
+                                return new ConsoleWriter().Write(match, 6).Write($"| {match.Model.Ip}").Write($"   {match.Model.Domain}");
+                        }
+                    });
             }
         }
 
-
-        public void Remove(string s, bool force) {
-            int line;
-            if (!int.TryParse(s, out line)) {
-                line = -1;
-            }
-
-            // TODO wildcarts and regex
-            List<HostsFileLine> hosts;
-            using (new Watch("filter")) {
-                hosts = _hostsFile.GetHosts()
-                    .Where(x => x.Domain == s || x.LineNumber == line)
-                    .OrderBy(x => x.Domain)
-                    .ToList();
-            }
+        public void Remove(Filter filter, FilterProp what, bool force) {
+            var matches = Filter(filter, what);
 
             if (!force) {
-                Console.WriteLine($"found {hosts.Count} to remove\r\n");
-                hosts = ConsoleEx.AskYesOrNo(hosts, x => $"remove '{HostsFile.CreateTextLine(x)}'?");
+                Console.WriteLine($"found {matches.Count} to remove\r\n");
+                matches = ConsoleEx.AskYesOrNo(matches, x => {
+                    switch (what) {
+                        default:
+                        case FilterProp.Domain:
+                            return ConsoleWriter.Create($"remove '").Write(x.Model.Ip).Write("    ").Write(x).Write("'?");
+                        case FilterProp.Ip:
+                            return ConsoleWriter.Create($"remove '").Write(x).Write("    ").Write(x.Model.Domain).Write("'?");
+                        case FilterProp.Line:
+                            return ConsoleWriter.Create($"remove '").Write(x).Write("| ").Write(x.Model.Ip).Write("    ").Write(x.Model.Domain).Write("'?");
+                    }
+                });
             }
 
-            if (hosts.Count == 0) {
+            if (matches.Count == 0) {
                 Console.WriteLine($"-- nothing to remove");
                 return;
             }
 
             using (new Watch("delete")) {
-                _hostsFile.Remove(hosts);
+                _hostsFile.Remove(matches.Select(x => x.Model));
             }
-            hosts.ForEach(x => Console.WriteLine($"removed: {HostsFile.CreateTextLine(x)}"));
+            matches.ForEach(x => Console.WriteLine($"removed: {HostsFile.CreateTextLine(x.Model)}"));
         }
+
+        private List<Match<HostsFileLine>> Filter(Filter filter, FilterProp what) {
+            using (new Watch("filter")) {
+                return _hostsFile.GetHosts().Select(x => filter.GetMatch(x, _ => {
+                    switch (what) {
+                        default:
+                        case FilterProp.Domain:
+                            return _.Domain;
+                        case FilterProp.Ip:
+                            return _.Ip;
+                        case FilterProp.Line:
+                            return _.LineNumber.ToString();
+                    }
+                })).Where(x => x.IsSuccess).ToList();
+            }
+        }
+    }
+
+
+    internal enum FilterProp {
+        Domain,
+        Ip,
+        Line
     }
 }

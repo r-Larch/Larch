@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Larch.Host.Parser;
+using Larch.Host.Contoller;
 
 
 namespace Larch.Host {
     public class ConsoleEx {
         public static void PrintException(string message, Exception e) {
+            if (Console.CursorLeft != 0) {
+                Console.WriteLine();
+            }
+
             var width = Console.WindowWidth;
             Console.ForegroundColor = ConsoleColor.Red;
 
@@ -24,61 +28,22 @@ namespace Larch.Host {
             }
         }
 
-        public static void PrintHighlighted<T>(string line, Match<T> filter, ConsoleColor color = ConsoleColor.Red) {
-            if (filter == null) {
-                Console.WriteLine(line);
-                return;
-            }
-
-            var chars = line.ToCharArray();
-
-            var count = 0;
-            var max = line.IndexOf(filter.Value, StringComparison.Ordinal);
-
-            while (count < max) {
-                Console.Write(chars[count++]);
-            }
-
-            var last = filter.Matches.Max(x => x.Stop);
-            var c = Console.ForegroundColor;
-            for (var i = 0; i < last; i++) {
-                var part = filter.Matches.LastOrDefault(x => x.IsMatch && i >= x.Start && i < x.Stop);
-                if (part != null) {
-                    var col = GetColor(part.Num);
-                    Console.ForegroundColor = col;
-                } else {
-                    Console.ForegroundColor = c;
-                }
-                Console.Write(chars[count++]);
-            }
-            Console.ForegroundColor = c;
-
-            while (count < line.Length) {
-                Console.Write(chars[count++]);
-            }
-
-            Console.Write(Environment.NewLine);
-        }
-
-        private static ConsoleColor GetColor(int num) {
-            var t = Enum.GetValues(typeof(ConsoleColor));
-            return (ConsoleColor) t.GetValue(t.Length - num - 2);
-        }
-
         public static bool AskForYes(string question) {
-            Console.Write(question + " (Y/N) ");
-            ConsoleKey key;
-            while (true) {
-                key = Console.ReadKey().Key;
-                if (key == ConsoleKey.Y || key == ConsoleKey.N) {
-                    break;
-                }
-            }
-
-            return key == ConsoleKey.Y;
+            return AskForYes(ConsoleWriter.Create(question));
         }
 
-        public static List<T> AskYesOrNo<T>(List<T> hosts, Func<T, string> question) {
+        public static bool AskForYes(ConsoleWriter question) {
+            question.Flush(newLine: false);
+            Console.Write(" (Y/N) ");
+            while (true) {
+                var key = Console.ReadKey().Key;
+                if (key == ConsoleKey.Y || key == ConsoleKey.N) {
+                    return key == ConsoleKey.Y;
+                }
+            }
+        }
+
+        public static List<T> AskYesOrNo<T>(List<T> hosts, Func<T, ConsoleWriter> question) {
             var toRemove = new List<T>();
             foreach (var host in hosts) {
                 if (AskForYes(question(host))) {
@@ -90,10 +55,10 @@ namespace Larch.Host {
             return toRemove;
         }
 
-        public static void PrintWithPaging<T>(IEnumerable<Match<T>> matches, Func<T, int, string> line, int countAll = -1) {
-            var mes = matches as Match<T>[] ?? matches.ToArray();
+        public static void PrintWithPaging<T>(IEnumerable<T> list, Func<T, int, ConsoleWriter> line, int countAll = -1) {
+            var array = list as T[] ?? list.ToArray();
 
-            var found = mes.Length;
+            var found = array.Length;
             var height = Console.WindowHeight;
             var pages = found/height;
             var page = 1;
@@ -115,8 +80,14 @@ namespace Larch.Host {
             var count = 0;
             var lineNumber = 0;
             Console.WriteLine("Line  |");
-            foreach (var match in mes) {
-                ConsoleEx.PrintHighlighted(line(match.Model, lineNumber++), match);
+            foreach (var x in array) {
+                var writer = line(x, lineNumber++);
+                if (writer != null) {
+                    writer.Flush();
+                } else {
+                    Console.WriteLine();
+                }
+
                 count++;
 
                 if (count < height) continue;

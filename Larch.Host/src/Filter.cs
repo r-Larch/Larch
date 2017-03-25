@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -9,10 +8,10 @@ namespace Larch.Host {
         private readonly Regex _pattern;
         private readonly string _text;
 
+        public bool OnEmptyMatchAll { get; set; }
+
         public Filter(string pattern, CampareType type = CampareType.WildCard, CompareMode mode = CompareMode.CaseIgnore) {
             if (pattern == null) {
-                _pattern = null;
-                _text = null;
                 return;
             }
 
@@ -48,12 +47,12 @@ namespace Larch.Host {
             }
 
             // if we have no filter pattern we do not filter
-            return true;
+            return OnEmptyMatchAll;
         }
 
 
-        public Match<T> GetMatch<T>(string value, T model) {
-            if (value == null) value = string.Empty;
+        public Match<T> GetMatch<T>(T model, Func<T, string> property) {
+            var value = property(model) ?? string.Empty;
 
             if (_text != null) {
                 return new Match<T>() {
@@ -75,7 +74,7 @@ namespace Larch.Host {
 
             // if we have no filter pattern we do not filter
             return new Match<T>() {
-                IsSuccess = true,
+                IsSuccess = OnEmptyMatchAll,
                 Matches = GetMatchs(value),
                 Model = model,
                 Value = value
@@ -113,7 +112,7 @@ namespace Larch.Host {
             yield return new Group() {
                 Start = 0,
                 Stop = value.Length,
-                IsMatch = true,
+                IsMatch = OnEmptyMatchAll,
                 Num = 0
             };
         }

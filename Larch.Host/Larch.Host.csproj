@@ -44,8 +44,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contoller\ConsoleWriter.cs" />
     <Compile Include="Models\HostEntry.cs" />
     <Compile Include="Models\Options.cs" />
+    <Compile Include="src\AvailableColors.cs" />
     <Compile Include="src\ConsoleEx.cs" />
     <Compile Include="src\Executor.cs" />
     <Compile Include="src\Filter.cs" />

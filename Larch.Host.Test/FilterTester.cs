@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Larch.Host.Parser;
+using Larch.Host.Contoller;
 using NUnit.Framework;
 
 
@@ -29,11 +27,11 @@ namespace Larch.Host.Test {
 
 
         private void Test(Filter filter, string value) {
-            var matches = filter.GetMatch(value, "");
+            var match = filter.GetMatch(value, s => s);
             var table = new Table();
-            table.Create(1, 1, "matches", matches.Matches);
+            table.Create(1, 1, "matches", match.Matches);
             Console.WriteLine($"{value}|=> Count: {value.Length}");
-            ConsoleEx.PrintHighlighted(value, matches);
+            new ConsoleWriter().Write(match).Flush();
             Console.WriteLine();
         }
     }
