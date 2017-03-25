@@ -1,2 +1,2 @@
 
-choco push dest/hosts.1.0.0.nupkg
+choco push dest/hosts.1.1.0.nupkg

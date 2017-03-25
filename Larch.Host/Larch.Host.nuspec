@@ -3,7 +3,7 @@
 <package>
   <metadata>
     <id>hosts</id>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <title>hosts editor CMD</title>
     <authors>René Larch</authors>
     <owners>René Larch</owners>
@@ -16,12 +16,20 @@
     <!--<mailingListUrl>mailto:renelarch@gmail.com?Subject=pr:Larch.Host</mailingListUrl>-->
     <iconUrl>https://raw.githubusercontent.com/r-Larch/Larch.Host/master/Larch.Host/icon.hosts.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <!--<releaseNotes>Summary of changes made in this release of the package.</releaseNotes>-->
     <copyright>Copyright 2017 René Larch</copyright>
 
     <tags>host hosts hostfile hostsfile commandline CMD tool admin</tags>
     <summary>commandline tool to manage hosts file</summary>
     <description>hosts is a commandline tool to manage your hosts.txt entries.</description>
+
+    <releaseNotes>
+      New: Filter by domain, ip or line number.
+      New: Use Wildcards or Regex to filter hostsfile.
+      New: Colorized output for regex groubs.
+      New: All filters working with 'list' and 'remove'
+      New: Debug option.
+      Fix: NullPointerException when call 'hosts -e' and 'sublime text' was not installed.
+    </releaseNotes>
 
     <dependencies>
       <!--<dependency id="Mono.Options" version="4.4.0"/>-->
