@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Larch.Host.Test", "Larch.Host.Test\Larch.Host.Test.csproj", "{B5FA2863-378D-4D9A-BFC3-53EC5C641623}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IIS", "IIS\IIS.csproj", "{F381270B-3333-4EF1-BFF4-7D0E0B3D3DB9}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LarchConsole", "LarchConsole\LarchConsole.csproj", "{B76F0579-2272-47E7-BECD-66976FBDE763}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LarchConsole.test", "LarchConsole.test\LarchConsole.test.csproj", "{CBD2D8EA-BEBE-4BAC-B0F9-6F556D51601F}"
@@ -33,6 +35,10 @@ Global
 		{B5FA2863-378D-4D9A-BFC3-53EC5C641623}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5FA2863-378D-4D9A-BFC3-53EC5C641623}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5FA2863-378D-4D9A-BFC3-53EC5C641623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F381270B-3333-4EF1-BFF4-7D0E0B3D3DB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F381270B-3333-4EF1-BFF4-7D0E0B3D3DB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F381270B-3333-4EF1-BFF4-7D0E0B3D3DB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F381270B-3333-4EF1-BFF4-7D0E0B3D3DB9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B76F0579-2272-47E7-BECD-66976FBDE763}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B76F0579-2272-47E7-BECD-66976FBDE763}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B76F0579-2272-47E7-BECD-66976FBDE763}.Release|Any CPU.ActiveCfg = Release|Any CPU
