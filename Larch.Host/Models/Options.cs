@@ -29,6 +29,12 @@ namespace Larch.Host.Models {
         [Option('n', "line", HelpText = "Filter by line number")]
         public bool Line { get; set; }
 
+        [Option('c', "comment", HelpText = "Filter by comment")]
+        public bool Commentar { get; set; }
+
+        [Option('s', "disabled", HelpText = "show disabled lines")]
+        public bool IsDisabled { get; set; }
+
         [Option('R', "regex", HelpText = "Use regex for filter")]
         public bool Regex { get; set; }
 

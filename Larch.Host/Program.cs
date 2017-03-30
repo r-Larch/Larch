@@ -2,6 +2,7 @@
 using Larch.Host.Contoller;
 using Larch.Host.Models;
 using Larch.Host.Parser;
+using LarchConsole;
 
 
 namespace Larch.Host {
@@ -38,27 +39,32 @@ namespace Larch.Host {
                 return;
             }
 
+
+            // setup filter
             var filter = new Filter(options.Value,
                 options.Regex
                     ? CampareType.Regex
                     : CampareType.WildCard,
                 CompareMode.CaseIgnore
                 );
+            var filterProp = FilterProp.Domain;
+            if (options.Ip) {
+                filterProp = FilterProp.Ip;
+            }
+            if (options.Line) {
+                filterProp = FilterProp.Line;
+            }
+            if (options.Commentar) {
+                filterProp = FilterProp.Commentar;
+            }
+            if (options.IsDisabled) {
+                filterProp = FilterProp.IsDisabled;
+            }
 
             // list
             if (options.List) {
                 filter.OnEmptyMatchAll = true;
-
-                if (options.Ip) {
-                    host.List(filter, FilterProp.Ip);
-                    return;
-                }
-                if (options.Line) {
-                    host.List(filter, FilterProp.Line);
-                    return;
-                }
-
-                host.List(filter, FilterProp.Domain);
+                host.List(filter, filterProp);
                 return;
             }
 
@@ -70,16 +76,7 @@ namespace Larch.Host {
 
             // remove value
             if (options.Remove) {
-                if (options.Ip) {
-                    host.Remove(filter, FilterProp.Ip, options.Force);
-                    return;
-                }
-                if (options.Line) {
-                    host.Remove(filter, FilterProp.Line, options.Force);
-                    return;
-                }
-
-                host.Remove(filter, FilterProp.Domain, options.Force);
+                host.Remove(filter, filterProp, options.Force);
                 return;
             }
 

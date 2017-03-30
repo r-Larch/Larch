@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace Larch.Host {
+namespace LarchConsole {
     public class Table {
         private readonly StringBuilder sb = new StringBuilder();
 

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Larch.Host.Parser;
+using LarchConsole;
 using NUnit.Framework;
 
 

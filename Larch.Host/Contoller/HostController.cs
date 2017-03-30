@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Larch.Host.Parser;
+using LarchConsole;
 
 
 namespace Larch.Host.Contoller {
@@ -38,76 +39,103 @@ namespace Larch.Host.Contoller {
                 hosts = _hostsFile.GetHosts().ToList();
             }
 
-            var matches = Filter(filter, what);
+            var filterd = Filter(hosts, filter, what);
 
             using (new Watch("print")) {
                 ConsoleEx.PrintWithPaging(
-                    list: matches,
+                    list: filterd,
                     countAll: hosts.Count,
-                    line: (match, nr) => {
-                        switch (what) {
-                            default:
-                            case FilterProp.Domain:
-                                return new ConsoleWriter().Write($"{match.Model.LineNumber,6}| {match.Model.Ip}   ").Write(match);
-                            case FilterProp.Ip:
-                                return new ConsoleWriter().Write($"{match.Model.LineNumber,6}| ").Write(match).Write($"   {match.Model.Domain}");
-                            case FilterProp.Line:
-                                return new ConsoleWriter().Write(match, 6).Write($"| {match.Model.Ip}").Write($"   {match.Model.Domain}");
-                        }
-                    });
+                    header: ConsoleWriter.CreateLine(" Line |"),
+                    line: (x, nr) => new ConsoleWriter()
+                        .FormatLine("{line,6}|{disabled} {ip}   {domain}    {comment}", parms => parms
+                            .Add("line", x.LineNumber, what == FilterProp.Line)
+                            .Add("disabled", x.IsDisabled ? "#" : "")
+                            .Add("ip", x.Ip, what == FilterProp.Domain)
+                            .Add("domain", x.Domain, what == FilterProp.Domain)
+                            .Add("comment", x.Commentar, what == FilterProp.Commentar)
+                        )
+                    );
             }
         }
 
         public void Remove(Filter filter, FilterProp what, bool force) {
-            var matches = Filter(filter, what);
-
-            if (!force) {
-                Console.WriteLine($"found {matches.Count} to remove\r\n");
-                matches = ConsoleEx.AskYesOrNo(matches, x => {
-                    switch (what) {
-                        default:
-                        case FilterProp.Domain:
-                            return ConsoleWriter.Create($"remove '").Write(x.Model.Ip).Write("    ").Write(x).Write("'?");
-                        case FilterProp.Ip:
-                            return ConsoleWriter.Create($"remove '").Write(x).Write("    ").Write(x.Model.Domain).Write("'?");
-                        case FilterProp.Line:
-                            return ConsoleWriter.Create($"remove '").Write(x).Write("| ").Write(x.Model.Ip).Write("    ").Write(x.Model.Domain).Write("'?");
-                    }
-                });
+            List<HostsFileLine> hosts;
+            using (new Watch("read file")) {
+                hosts = _hostsFile.GetHosts().ToList();
             }
 
-            if (matches.Count == 0) {
+            var filterd = Filter(hosts, filter, what);
+
+            if (!force) {
+                Console.WriteLine($"found {filterd.Count} to remove\r\n");
+                filterd = ConsoleEx.AskYesOrNo(filterd, x => new ConsoleWriter()
+                    .FormatLine("remove '{line} {disabled} {ip}    {domain} {comment}'?", parms => parms
+                        .Add("line", x.LineNumber, what == FilterProp.Line)
+                        .Add("disabled", x.IsDisabled ? "#" : "")
+                        .Add("ip", x.Ip, what == FilterProp.Domain)
+                        .Add("domain", x.Domain, what == FilterProp.Domain)
+                        .Add("comment", x.Commentar, what == FilterProp.Commentar)
+                    )
+                );
+            }
+
+            if (filterd.Count == 0) {
                 Console.WriteLine($"-- nothing to remove");
                 return;
             }
 
             using (new Watch("delete")) {
-                _hostsFile.Remove(matches.Select(x => x.Model));
+                _hostsFile.Remove(filterd.Select(x => x.Model));
             }
-            matches.ForEach(x => Console.WriteLine($"removed: {HostsFile.CreateTextLine(x.Model)}"));
+            filterd.ForEach(x => Console.WriteLine($"removed: {HostsFile.CreateTextLine(x.Model)}"));
         }
 
-        private List<Match<HostsFileLine>> Filter(Filter filter, FilterProp what) {
+        private List<HostModel> Filter(List<HostsFileLine> hosts, Filter filter, FilterProp what) {
             using (new Watch("filter")) {
-                return _hostsFile.GetHosts().Select(x => filter.GetMatch(x, _ => {
-                    switch (what) {
-                        default:
-                        case FilterProp.Domain:
-                            return _.Domain;
-                        case FilterProp.Ip:
-                            return _.Ip;
-                        case FilterProp.Line:
-                            return _.LineNumber.ToString();
-                    }
-                })).Where(x => x.IsSuccess).ToList();
+                var filterd = hosts.Select(x => new HostModel() {
+                    Model = x,
+                    LineNumber = filter.GetMatch(x.LineNumber),
+                    Ip = filter.GetMatch(x.Ip),
+                    Domain = filter.GetMatch(x.Domain),
+                    Commentar = filter.GetMatch(x.Commentar),
+                    IsCommentarLine = x.IsCommentarLine,
+                    IsDisabled = x.IsDisabled
+                });
+
+                switch (what) {
+                    default:
+                    case FilterProp.Domain:
+                        return filterd.Where(x => x.Domain.IsSuccess).ToList();
+                    case FilterProp.Ip:
+                        return filterd.Where(x => x.Ip.IsSuccess).ToList();
+                    case FilterProp.Line:
+                        return filterd.Where(x => x.LineNumber.IsSuccess).ToList();
+                    case FilterProp.Commentar:
+                        return filterd.Where(x => x.Commentar.IsSuccess).ToList();
+                    case FilterProp.IsDisabled:
+                        return filterd.Where(x => x.IsDisabled).ToList();
+                }
             }
         }
+    }
+
+
+    internal class HostModel {
+        public HostsFileLine Model { get; set; }
+        public Match<int> LineNumber { get; set; }
+        public Match<string> Ip { get; set; }
+        public Match<string> Domain { get; set; }
+        public Match<string> Commentar { get; set; }
+        public bool IsCommentarLine { get; set; }
+        public bool IsDisabled { get; set; }
     }
 
 
     internal enum FilterProp {
         Domain,
         Ip,
-        Line
+        Line,
+        Commentar,
+        IsDisabled
     }
 }

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text;
 
 
-namespace Larch.Host {
+namespace LarchConsole {
     public class Watch : IDisposable {
         private readonly string _name;
         private readonly Stopwatch _watch;
@@ -22,7 +22,7 @@ namespace Larch.Host {
             var sec = (int) (msec/1000);
             msec = msec - sec*1000;
             var min = (int) (sec/60);
-            sec = sec - min * 60;
+            sec = sec - min*60;
 
             var sb = new StringBuilder();
             if (min > 0) {

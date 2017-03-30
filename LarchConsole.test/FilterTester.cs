@@ -1,9 +1,8 @@
 ﻿using System;
-using Larch.Host.Contoller;
 using NUnit.Framework;
 
 
-namespace Larch.Host.Test {
+namespace LarchConsole.Test {
     [TestFixture]
     public class FilterTester {
         [Test]

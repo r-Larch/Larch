@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 
-namespace Larch.Host {
+namespace LarchConsole {
     public class Filter {
         private readonly Regex _pattern;
         private readonly string _text;
@@ -50,6 +50,14 @@ namespace Larch.Host {
             return OnEmptyMatchAll;
         }
 
+
+        public Match<string> GetMatch(string model) {
+            return GetMatch(model, x => x);
+        }
+
+        public Match<T> GetMatch<T>(T model) {
+            return GetMatch(model, x => x.ToString());
+        }
 
         public Match<T> GetMatch<T>(T model, Func<T, string> property) {
             var value = property(model) ?? string.Empty;
@@ -119,11 +127,18 @@ namespace Larch.Host {
     }
 
 
-    public class Match<T> {
-        public IEnumerable<Group> Matches;
-        public T Model;
-        public bool IsSuccess;
-        public string Value;
+    public class Match<T> : IMatch {
+        public IEnumerable<Group> Matches { get; set; }
+        public T Model { get; set; }
+        public bool IsSuccess { get; set; }
+        public string Value { get; set; }
+    }
+
+
+    public interface IMatch {
+        IEnumerable<Group> Matches { get; set; }
+        bool IsSuccess { get; set; }
+        string Value { get; set; }
     }
 
 

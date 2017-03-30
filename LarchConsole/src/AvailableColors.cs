@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Larch.Host {
+namespace LarchConsole {
     public class AvailableColors {
         private readonly List<ConsoleColor> _colors;
 

@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B5FA2863-378D-4D9A-BFC3-53EC5C641623}</ProjectGuid>
+    <ProjectGuid>{CBD2D8EA-BEBE-4BAC-B0F9-6F556D51601F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Larch.Host.Test</RootNamespace>
-    <AssemblyName>Larch.Host.Test</AssemblyName>
+    <RootNamespace>LarchConsole.test</RootNamespace>
+    <AssemblyName>LarchConsole.test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,18 +50,14 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="CreateTextLineTester.cs" />
-    <Compile Include="HostsFileTest.cs" />
+    <Compile Include="ConsolWriterTester.cs" />
+    <Compile Include="FilterTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Larch.Host\Larch.Host.csproj">
-      <Project>{E614C3C5-A94B-4071-8EB9-55B7FB8BAFC3}</Project>
-      <Name>Larch.Host</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LarchConsole\LarchConsole.csproj">
       <Project>{B76F0579-2272-47E7-BECD-66976FBDE763}</Project>
       <Name>LarchConsole</Name>

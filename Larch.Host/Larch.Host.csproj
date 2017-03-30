@@ -44,19 +44,13 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contoller\ConsoleWriter.cs" />
     <Compile Include="Models\HostEntry.cs" />
     <Compile Include="Models\Options.cs" />
-    <Compile Include="src\AvailableColors.cs" />
-    <Compile Include="src\ConsoleEx.cs" />
     <Compile Include="src\Executor.cs" />
-    <Compile Include="src\Filter.cs" />
     <Compile Include="src\Parser\HostsFileLine.cs" />
     <Compile Include="src\Parser\HostsFile.cs" />
     <Compile Include="src\Parser\FileLine.cs" />
     <Compile Include="src\Parser\IFileLine.cs" />
-    <Compile Include="src\Table.cs" />
-    <Compile Include="src\Watch.cs" />
     <Compile Include="Contoller\HostController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,6 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.hosts.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LarchConsole\LarchConsole.csproj">
+      <Project>{B76F0579-2272-47E7-BECD-66976FBDE763}</Project>
+      <Name>LarchConsole</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="ILMergeItems">
