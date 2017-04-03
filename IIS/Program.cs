@@ -41,22 +41,20 @@ namespace IIS {
                 CompareMode.CaseIgnore
                 );
 
-            var filterProp = FilterProp.Binding;
-            if (options.Site) {
-                filterProp = FilterProp.Name;
-            }
-
-            if (options.Id) {
-                filterProp = FilterProp.Id;
-            }
-
-            if (options.State) {
-                filterProp = FilterProp.State;
-            }
-
+            var filterProp = GetFilterProp(options);
 
             // list
-            if (options.List) {
+            if (
+                options.List ||
+                options.Site ||
+                options.Id ||
+                options.State ||
+                options.Ip ||
+                options.Https ||
+                options.Sni ||
+                options.CentralCertStore ||
+                options.HttpsNone
+                ) {
                 filter.OnEmptyMatchAll = true;
                 iis.List(filter, filterProp);
                 return;
@@ -67,18 +65,42 @@ namespace IIS {
                 Console.WriteLine(options.GetUsage());
                 return;
             }
+        }
 
-            // remove value
-            if (options.Remove) {
-                iis.Remove(filter, filterProp, options.Force);
-                return;
+        private FilterProp GetFilterProp(Options options) {
+            if (options.Site) {
+                return FilterProp.Name;
             }
 
-            // add value
-            if (options.Add || !string.IsNullOrEmpty(options.Value)) {
-                iis.Add(options.Value, filterProp);
-                return;
+            if (options.Id) {
+                return FilterProp.Id;
             }
+
+            if (options.State) {
+                return FilterProp.State;
+            }
+
+            if (options.Ip) {
+                return FilterProp.Ip;
+            }
+
+            if (options.Https) {
+                return FilterProp.Https;
+            }
+
+            if (options.Sni) {
+                return FilterProp.Sni;
+            }
+
+            if (options.CentralCertStore) {
+                return FilterProp.CentralCertStore;
+            }
+
+            if (options.HttpsNone) {
+                return FilterProp.HttpsNone;
+            }
+
+            return FilterProp.Binding;
         }
     }
 }

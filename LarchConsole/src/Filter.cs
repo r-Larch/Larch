@@ -10,7 +10,10 @@ namespace LarchConsole {
 
         public bool OnEmptyMatchAll { get; set; }
 
+        public string Pattern { get; }
+
         public Filter(string pattern, CampareType type = CampareType.WildCard, CompareMode mode = CompareMode.CaseIgnore) {
+            Pattern = pattern;
             if (pattern == null) {
                 return;
             }

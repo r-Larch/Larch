@@ -3,6 +3,11 @@
         Binding,
         Name,
         Id,
-        State
+        State,
+        Ip,
+        Https,
+        Sni,
+        CentralCertStore,
+        HttpsNone
     }
 }

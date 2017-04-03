@@ -11,15 +11,6 @@ namespace IIS.Models {
         [Option('l', "list", HelpText = "List using wildcards or regex")]
         public bool List { get; set; }
 
-        [Option('a', "add", HelpText = "Add binding or site")]
-        public bool Add { get; set; }
-
-        [Option('r', "remove", HelpText = "Remove binding or site")]
-        public bool Remove { get; set; }
-
-        [Option('f', "force", HelpText = "Use force (e.g. force remove)")]
-        public bool Force { get; set; }
-
         [Option('s', "site", HelpText = "Filter by site")]
         public bool Site { get; set; }
 
@@ -28,6 +19,21 @@ namespace IIS.Models {
 
         [Option('t', "state", HelpText = "Filter by state")]
         public bool State { get; set; }
+
+        [Option("ip", HelpText = "Show all sites using this IP")]
+        public bool Ip { get; set; }
+
+        [Option("https", HelpText = "Show all sites using https://")]
+        public bool Https { get; set; }
+
+        [Option("sni", HelpText = "Show all https sites using Sni")]
+        public bool Sni { get; set; }
+
+        [Option("central", HelpText = "Show all https sites using CentralCertStore")]
+        public bool CentralCertStore { get; set; }
+
+        [Option("https-none", HelpText = "Show all https sites without special ssl flags")]
+        public bool HttpsNone { get; set; }
 
         [Option('R', "regex", HelpText = "Use regex for filter")]
         public bool Regex { get; set; }
@@ -41,8 +47,7 @@ namespace IIS.Models {
         [HelpOption]
         public string GetUsage() {
             var sb = new StringBuilder();
-            sb.AppendLine(" Usage: iis [OPTIONS] VALUE");
-            sb.AppendLine(" Shorthand for add: iis VALUE");
+            sb.AppendLine(" Usage: iis -l [FILTER] [FLAGS] PATTERN");
 
             var helpText = new HelpText() {
                 Heading = sb.ToString(),
