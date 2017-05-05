@@ -1,0 +1,9 @@
+[submodule "Host"]
+	path = Host
+	url = https://github.com/r-Larch/Host.git
+[submodule "IIS"]
+	path = IIS
+	url = https://github.com/r-Larch/IIS.git
+[submodule "LarchConsole"]
+	path = LarchConsole
+	url = https://github.com/r-Larch/LarchConsole.git
