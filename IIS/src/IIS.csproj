@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E614C3C5-A94B-4071-8EB9-55B7FB8BAFC3}</ProjectGuid>
+    <ProjectGuid>{F381270B-3333-4EF1-BFF4-7D0E0B3D3DB9}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Larch.Host</RootNamespace>
-    <AssemblyName>hosts</AssemblyName>
+    <RootNamespace>IIS</RootNamespace>
+    <AssemblyName>IIS</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,53 +32,40 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
+      <HintPath>..\..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Administration.7.0.0.0\lib\net20\Microsoft.Web.Administration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\HostEntry.cs" />
+    <Compile Include="Controller\IISController.cs" />
+    <Compile Include="FilterProp.cs" />
     <Compile Include="Models\Options.cs" />
-    <Compile Include="src\Executor.cs" />
-    <Compile Include="src\Parser\HostsFileLine.cs" />
-    <Compile Include="src\Parser\HostsFile.cs" />
-    <Compile Include="src\Parser\FileLine.cs" />
-    <Compile Include="src\Parser\IFileLine.cs" />
-    <Compile Include="Contoller\HostController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\BindingExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Larch.Host.nuspec">
+    <None Include="iis.nuspec">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.hosts.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LarchConsole\LarchConsole.csproj">
+    <ProjectReference Include="..\..\LarchConsole\src\LarchConsole.csproj">
       <Project>{B76F0579-2272-47E7-BECD-66976FBDE763}</Project>
       <Name>LarchConsole</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="ILMergeItems">
-    <ItemGroup>
-      <Input Include="C:\b\MSBuild.ExtensionPack.dll" />
-      <Input Include="C:\b\Ionic.Zip.dll" />
-    </ItemGroup>
-    <MSBuild.ExtensionPack.Framework.ILMerge Condition="Exists('%(Input.FullPath)')" InputAssemblies="@(Input)" OutputFile="C:\a\MyNewAssembly.dll" />
-  </Target>
   <PropertyGroup>
     <PostBuildEvent>call "$(SolutionDir)tools\chocopack.cmd" "$(ProjectDir)$(ProjectName).nuspec" "$(SolutionDir)dest"
 </PostBuildEvent>

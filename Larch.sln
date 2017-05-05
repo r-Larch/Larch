@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Larch.Host", "Larch.Host\Larch.Host.csproj", "{E614C3C5-A94B-4071-8EB9-55B7FB8BAFC3}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CE67E717-0890-4AE9-AB81-943679CF7490}"
 	ProjectSection(SolutionItems) = preProject
 		ApiKey.cmd = ApiKey.cmd
@@ -13,13 +11,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Larch.Host.Test", "Larch.Host.Test\Larch.Host.Test.csproj", "{B5FA2863-378D-4D9A-BFC3-53EC5C641623}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\src\Host.csproj", "{E614C3C5-A94B-4071-8EB9-55B7FB8BAFC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IIS", "IIS\IIS.csproj", "{F381270B-3333-4EF1-BFF4-7D0E0B3D3DB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host.Test", "Host\test\Host.Test.csproj", "{B5FA2863-378D-4D9A-BFC3-53EC5C641623}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LarchConsole", "LarchConsole\LarchConsole.csproj", "{B76F0579-2272-47E7-BECD-66976FBDE763}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IIS", "IIS\src\IIS.csproj", "{F381270B-3333-4EF1-BFF4-7D0E0B3D3DB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LarchConsole.test", "LarchConsole.test\LarchConsole.test.csproj", "{CBD2D8EA-BEBE-4BAC-B0F9-6F556D51601F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LarchConsole", "LarchConsole\src\LarchConsole.csproj", "{B76F0579-2272-47E7-BECD-66976FBDE763}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LarchConsole.Test", "LarchConsole\test\LarchConsole.Test.csproj", "{CBD2D8EA-BEBE-4BAC-B0F9-6F556D51601F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

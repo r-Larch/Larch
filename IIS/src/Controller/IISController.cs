@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -34,7 +35,7 @@ namespace IIS.Controller {
                             .Add("port", GetPort(b.Model.EndPoint))
                             .Add("host", b, what == FilterProp.Binding)
                             .Add("protocol", b.Model.Protocol)
-                            .Add("ssl", GetSslString(b.Model.SslFlags))
+                            .Add("ssl", GetSslString(b.Model.SslFlags()))
                         )
                         .WriteLine()
                     );
@@ -65,11 +66,11 @@ namespace IIS.Controller {
                     case FilterProp.Https:
                         return temp.Where(x => x.Bindings.Any(_ => _.Model.Protocol == "https"));
                     case FilterProp.Sni:
-                        return temp.Where(x => x.Bindings.Any(_ => (_.Model.SslFlags & SslFlags.Sni) == SslFlags.Sni));
+                        return temp.Where(x => x.Bindings.Any(_ => (_.Model.SslFlags() & SslFlags.Sni) == SslFlags.Sni));
                     case FilterProp.CentralCertStore:
-                        return temp.Where(x => x.Bindings.Any(_ => (_.Model.SslFlags & SslFlags.CentralCertStore) == SslFlags.CentralCertStore));
+                        return temp.Where(x => x.Bindings.Any(_ => (_.Model.SslFlags() & SslFlags.CentralCertStore) == SslFlags.CentralCertStore));
                     case FilterProp.HttpsNone:
-                        return temp.Where(x => x.Bindings.Any(_ => _.Model.Protocol == "https" && _.Model.SslFlags == SslFlags.None));
+                        return temp.Where(x => x.Bindings.Any(_ => _.Model.Protocol == "https" && _.Model.SslFlags() == SslFlags.None));
                 }
             }
         }
